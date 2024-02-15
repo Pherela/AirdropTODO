@@ -35,12 +35,21 @@ class TodoApp:
                 writer.writerow([project, category, priority] + task_info)
 
     def add_task_to_project(self, project):
+        tasks = []
+        reader = self.read_tasks()
+        tasks = list(reader)
+        project_exists = any(t[0] == project for t in tasks)
+        if not project_exists:
+            print(f"Project {project} does not exist.")
+            return
         task = input(f"Enter a new task for project '{project}': ")
+        category = [t[1] for t in tasks if t[0] == project][0]
+        priority = [t[2] for t in tasks if t[0] == project][0]
         num_links = self.get_input(f"Enter the number of links for task '{task}': ", int)
         links = self.get_links(num_links)
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([project, task] + links)
+            writer.writerow([project, category, priority, task] + links)
 
     def view_tasks(self):
         with open(self.filename, 'r') as f:
