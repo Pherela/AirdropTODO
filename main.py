@@ -8,25 +8,33 @@ class TodoApp:
             with open(self.filename, 'w') as f:
                 pass
 
-    def get_input(self, prompt, input_type=int):
+    def validate_input(self, input_value, input_type):
+        try:
+            return input_type(input_value), None
+        except ValueError:
+            return None, f"Invalid input. Please enter a {input_type.__name__}."
+
+    def get_input(self, prompt, input_type=str):
         while True:
-            try:
-                value = input_type(input(prompt))
-                break
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-        return value
+            value, error = self.validate_input(input(prompt), input_type)
+            if error is None:
+                return value
+            print(error)
 
     def get_links(self, num_links):
-        return [input(f"Enter link {i+1}: ") for i in range(num_links)]
+        return [self.get_input(f"Enter link {i+1}: ") for i in range(num_links)]
+
+    def add_task(self, task):
+        num_links = self.get_input(f"Enter the number of links for task '{task}': ", int)
+        links = self.get_links(num_links)
+        return [task] + links
 
     def add_project(self, tasks, project, category, priority):
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
             for task in tasks:
-                num_links = self.get_input(f"Enter the number of links for task '{task}': ")
-                links = self.get_links(num_links)
-                writer.writerow([project, category, priority, task] + links)
+                task_info = self.add_task(task)
+                writer.writerow([project, category, priority] + task_info)
 
     def add_task_to_project(self, project):
         tasks = []
@@ -114,14 +122,14 @@ def main():
         print("6. Edit task")
         print("7. Edit task link")
         print("8. Quit")
-        option = app.get_input("Choose an option: ", input_type=str)
+        option = app.get_input("Choose an option: ")
         if option == '1':
             num_projects = app.get_input("Enter the number of projects: ")
             for j in range(num_projects):
                 project = input(f"Enter project {j+1}: ")
                 category = input(f"Enter a category for the project: ")
                 priority = input(f"Enter a priority for the project: ")
-                num_tasks = app.get_input("Enter the number of tasks: ")
+                num_tasks = app.get_input("Enter the number of tasks: ", input_type=int)
                 tasks = [input(f"Enter task {i+1}: ") for i in range(num_tasks)]
                 app.add_project(tasks, project, category, priority)
         elif option == '2':
