@@ -4,25 +4,28 @@ import os
 class TodoApp:
     def __init__(self, filename):
         self.filename = filename
-        # Check if file exists, if not, create it
         if not os.path.isfile(self.filename):
             with open(self.filename, 'w') as f:
                 pass
+
+    def get_input(self, prompt, input_type=int):
+        while True:
+            try:
+                value = input_type(input(prompt))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+        return value
+
+    def get_links(self, num_links):
+        return [input(f"Enter link {i+1}: ") for i in range(num_links)]
 
     def add_project(self, tasks, project, category):
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
             for task in tasks:
-                while True:
-                    try:
-                        num_links = int(input(f"Enter the number of links for task '{task}': "))
-                        break
-                    except ValueError:
-                        print("Invalid input. Please enter a number.")
-                links = []
-                for i in range(num_links):
-                    link = input(f"Enter link {i+1} for task '{task}': ")
-                    links.append(link)
+                num_links = self.get_input(f"Enter the number of links for task '{task}': ")
+                links = self.get_links(num_links)
                 writer.writerow([project, category, task] + links)
 
     def add_task_to_project(self, project):
@@ -36,16 +39,8 @@ class TodoApp:
             return
         task = input(f"Enter a new task for project '{project}': ")
         category = [t[1] for t in tasks if t[0] == project][0]
-        while True:
-            try:
-                num_links = int(input(f"Enter the number of links for task '{task}': "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-        links = []
-        for i in range(num_links):
-            link = input(f"Enter link {i+1} for task '{task}': ")
-            links.append(link)
+        num_links = self.get_input(f"Enter the number of links for task '{task}': ")
+        links = self.get_links(num_links)
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow([project, category, task] + links)
@@ -101,16 +96,8 @@ class TodoApp:
             tasks = list(reader)
         for i, t in enumerate(tasks):
             if t[0] == project and t[2] == task:
-                while True:
-                    try:
-                        num_links = int(input(f"Enter the number of new links for task '{task}': "))
-                        break
-                    except ValueError:
-                        print("Invalid input. Please enter a number.")
-                links = []
-                for j in range(num_links):
-                    link = input(f"Enter new link {j+1} for task '{task}': ")
-                    links.append(link)
+                num_links = self.get_input(f"Enter the number of new links for task '{task}': ")
+                links = self.get_links(num_links)
                 t[3:] = links
         with open(self.filename, 'w', newline='') as f:
             writer = csv.writer(f)
@@ -127,27 +114,14 @@ def main():
         print("6. Edit task")
         print("7. Edit task link")
         print("8. Quit")
-        option = input("Choose an option: ")
+        option = app.get_input("Choose an option: ", input_type=str)
         if option == '1':
-            while True:
-                try:
-                    num_projects = int(input("Enter the number of projects: "))
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a number.")
+            num_projects = app.get_input("Enter the number of projects: ")
             for j in range(num_projects):
                 project = input(f"Enter project {j+1}: ")
                 category = input(f"Enter a category for the project: ")
-                while True:
-                    try:
-                        num_tasks = int(input("Enter the number of tasks: "))
-                        break
-                    except ValueError:
-                        print("Invalid input. Please enter a number.")
-                tasks = []
-                for i in range(num_tasks):
-                    task = input(f"Enter task {i+1}: ")
-                    tasks.append(task)
+                num_tasks = app.get_input("Enter the number of tasks: ")
+                tasks = [input(f"Enter task {i+1}: ") for i in range(num_tasks)]
                 app.add_project(tasks, project, category)
         elif option == '2':
             project = input("Enter the project to add a task to: ")
