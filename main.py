@@ -36,7 +36,7 @@ class TodoApp:
 
     def add_task_to_project(self, project):
         tasks = []
-        reader = self.read_csv()
+        reader = self.read_tasks()
         tasks = list(reader)
         project_exists = any(t[0] == project for t in tasks)
         if not project_exists:
@@ -58,39 +58,39 @@ class TodoApp:
                 print(f'Project: {row[0]}, Category: {row[1]}, Priority: {row[2]}, Task: {row[3]}, Links: {", ".join(row[4:])}')
 
     def delete_project(self, project):
-        column = self.read_csv()
-        new_tasks = [t for t in column if t[0] != project]
-        self.write_csv(new_tasks)
+        tasks = self.read_tasks()
+        new_tasks = [t for t in tasks if t[0] != project]
+        self.write_tasks(new_tasks)
 
     def edit_project(self, old_project, new_project):
-        tasks = self.read_csv()
+        tasks = self.read_tasks()
         for t in tasks:
             if t[0] == old_project:
                 t[0] = new_project
-        self.write_csv(tasks)
+        self.write_tasks(tasks)
 
     def edit_task(self, project, old_task, new_task):
-        tasks = self.read_csv()
+        tasks = self.read_tasks()
         for t in tasks:
             if t[0] == project and t[3] == old_task:
                 t[3] = new_task
-        self.write_csv(tasks)
+        self.write_tasks(tasks)
 
     def edit_task_link(self, project, task):
-        tasks = self.read_csv()
+        tasks = self.read_tasks()
         for t in tasks:
             if t[0] == project and t[3] == task:
                 num_links = self.get_input(f"Enter the number of new links for task '{task}': ")
                 links = self.get_links(num_links)
                 t[4:] = links
-        self.write_csv(tasks)
+        self.write_tasks(tasks)
 
-    def read_csv(self):
+    def read_tasks(self):
         with open(self.filename, 'r') as f:
             reader = csv.reader(f)
             return list(reader)
 
-    def write_csv(self, tasks):
+    def write_tasks(self, tasks):
         with open(self.filename, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(tasks)
