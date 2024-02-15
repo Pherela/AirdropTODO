@@ -36,7 +36,7 @@ class TodoApp:
 
     def add_task_to_project(self, project):
         task = input(f"Enter a new task for project '{project}': ")
-        num_links = self.get_input(f"Enter the number of links for task '{task}': ")
+        num_links = self.get_input(f"Enter the number of links for task '{task}': ", int)
         links = self.get_links(num_links)
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
