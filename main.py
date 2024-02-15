@@ -20,13 +20,13 @@ class TodoApp:
     def get_links(self, num_links):
         return [input(f"Enter link {i+1}: ") for i in range(num_links)]
 
-    def add_project(self, tasks, project, category):
+    def add_project(self, tasks, project, category, priority):
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
             for task in tasks:
                 num_links = self.get_input(f"Enter the number of links for task '{task}': ")
                 links = self.get_links(num_links)
-                writer.writerow([project, category, task] + links)
+                writer.writerow([project, category, priority, task] + links)
 
     def add_task_to_project(self, project):
         tasks = []
@@ -49,7 +49,7 @@ class TodoApp:
         with open(self.filename, 'r') as f:
             reader = csv.reader(f)
             for row in reader:
-                print(f'Project: {row[0]}, Category: {row[1]}, Task: {row[2]}, Links: {", ".join(row[3:])}')
+                print(f'Project: {row[0]}, Category: {row[1]}, Priority: {row[2]}, Task: {row[3]}, Links: {", ".join(row[4:])}')
 
     def delete_project(self, project):
         tasks = []
@@ -83,8 +83,8 @@ class TodoApp:
             reader = csv.reader(f)
             tasks = list(reader)
         for i, t in enumerate(tasks):
-            if t[0] == project and t[2] == old_task:
-                t[2] = new_task
+            if t[0] == project and t[3] == old_task:
+                t[3] = new_task
         with open(self.filename, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(tasks)
@@ -95,10 +95,10 @@ class TodoApp:
             reader = csv.reader(f)
             tasks = list(reader)
         for i, t in enumerate(tasks):
-            if t[0] == project and t[2] == task:
+            if t[0] == project and t[3] == task:
                 num_links = self.get_input(f"Enter the number of new links for task '{task}': ")
                 links = self.get_links(num_links)
-                t[3:] = links
+                t[4:] = links
         with open(self.filename, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(tasks)
@@ -120,9 +120,10 @@ def main():
             for j in range(num_projects):
                 project = input(f"Enter project {j+1}: ")
                 category = input(f"Enter a category for the project: ")
+                priority = input(f"Enter a priority for the project: ")
                 num_tasks = app.get_input("Enter the number of tasks: ")
                 tasks = [input(f"Enter task {i+1}: ") for i in range(num_tasks)]
-                app.add_project(tasks, project, category)
+                app.add_project(tasks, project, category, priority)
         elif option == '2':
             project = input("Enter the project to add a task to: ")
             app.add_task_to_project(project)
