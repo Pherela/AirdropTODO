@@ -1,10 +1,13 @@
 import csv
 import os
+from csv_handler import CSVHandler
+
 
 class TodoApp:
     def __init__(self, filename):
         self.filename = filename
         self.ensure_file_exists()
+        self.handler = CSVHandler(self.filename)
 
     def ensure_file_exists(self):
         if not os.path.isfile(self.filename):
@@ -35,7 +38,7 @@ class TodoApp:
                 writer.writerow([project, category, priority] + task_info)
 
     def add_task_to_project(self, project):
-        tasks = list(self.read_csv())
+        tasks = list(self.handler.csv_operation('r'))
         project_tasks = [t for t in tasks if t[0] == project]
 
         if not project_tasks:
@@ -59,42 +62,32 @@ class TodoApp:
                 print(f'Project: {row[0]}, Category: {row[1]}, Priority: {row[2]}, Task: {row[3]}, Links: {", ".join(row[4:])}')
 
     def delete_project(self, project):
-        tasks = self.read_csv()
+        tasks = self.handler.csv_operation('r')
         new_tasks = [t for t in tasks if t[0] != project]
-        self.write_csv(new_tasks)
+        self.handler.csv_operation(new_tasks)
 
     def edit_project(self, old_project, new_project):
-        tasks = self.read_csv()
+        tasks = self.handler.csv_operation('r')
         for t in tasks:
             if t[0] == old_project:
                 t[0] = new_project
-        self.write_csv(tasks)
+        self.handler.csv_operation("w", tasks)
 
     def edit_task(self, project, old_task, new_task):
-        tasks = self.read_csv()
+        tasks = self.handler.csv_operation('r')
         for t in tasks:
             if t[0] == project and t[3] == old_task:
                 t[3] = new_task
-        self.write_csv(tasks)
+        self.handler.csv_operation("w", tasks)
 
     def edit_task_link(self, project, task):
-        tasks = self.read_csv()
+        tasks = self.handler.csv_operation('r')
         for t in tasks:
             if t[0] == project and t[3] == task:
                 num_links = self.get_input(f"Enter the number of new links for task '{task}': ")
                 links = self.get_links(num_links)
                 t[4:] = links
-        self.write_csv(tasks)
-
-    def read_csv(self):
-        with open(self.filename, 'r') as f:
-            reader = csv.reader(f)
-            return list(reader)
-
-    def write_csv(self, tasks):
-        with open(self.filename, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerows(tasks)
+        self.handler.csv_operation("w", tasks)
 
 def main():
     app = TodoApp('tasks.csv')
