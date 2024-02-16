@@ -80,14 +80,16 @@ class TodoApp:
                 t[3] = new_task
         self.handler.csv_operation("w", tasks)
 
-    def edit_task_link(self, project, task):
-        tasks = self.handler.csv_operation('r')
-        for t in tasks:
-            if t[0] == project and t[3] == task:
-                num_links = self.get_input(f"Enter the number of new links for task '{task}': ")
-                links = self.get_links(num_links)
-                t[4:] = links
-        self.handler.csv_operation("w", tasks)
+    def edit_link(self):
+        data = self.handler.csv_operation('r')
+        old_link = input("Enter the old link you want to replace: ")
+        new_link = input("Enter the new link: ")
+        for sublist in data:
+            for i, item in enumerate(sublist):
+                if item == old_link:
+                    sublist[i] = new_link
+        self.handler.csv_operation("w", data)
+
 
 def main():
     app = TodoApp('tasks.csv')
@@ -99,7 +101,7 @@ def main():
             "4. Delete project",
             "5. Edit project",
             "6. Edit task",
-            "7. Edit task link",
+            "7. Edit link",
             "8. Quit",
         ]))
         option = app.get_input("Choose an option: ")
@@ -131,9 +133,7 @@ def main():
             new_task = input("Enter the new task: ")
             app.edit_task(project, old_task, new_task)
         elif option == '7':
-            project = input("Enter the project of the task to edit the link: ")
-            task = input("Enter the task to edit the link: ")
-            app.edit_task_link(project, task)
+            app.edit_link()
         elif option == '8':
             break
 
