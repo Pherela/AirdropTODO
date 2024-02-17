@@ -15,12 +15,8 @@ class TodoApp:
             with open(self.filename, 'w') as f:
                 pass
 
-    def add_project(self, tasks, project, category, project_priority):
-        with open(self.filename, 'a', newline='') as f:
-            writer = csv.writer(f)
-            for task in tasks:
-                task_info = self.add_task(task)
-                writer.writerow([project_priority,project, category] + task_info)
+    def add_project(self, project_priority, project_name, project_category, project_task, task_link):
+        self.handler.append_csv([[project_priority, project_name, project_category, project_task, task_link]])
 
     def add_task_to_project(self, project_name):
         tasks = list(self.handler.read_csv())
@@ -75,7 +71,7 @@ def main():
     app = TodoApp('tasks.csv')
     while True:
         print("\n".join([
-            "1. Add project",
+            "1. add project",
             "2. Add task to existing project",
             "3. View projects",
             "4. Delete project",
@@ -87,13 +83,12 @@ def main():
         option = input("Choose an option: ")
 
         if option == '1':
-            for j in range(num_projects):
-                project = input(f"Enter project {j+1}: ")
-                category = input(f"Enter a category for the project: ")
-                priority = input(f"Enter a priority for the project: ")
-                num_tasks = app.get_input("Enter the number of tasks: ", int)
-                tasks = [input(f"Enter task {i+1}: ") for i in range(num_tasks)]
-                app.add_project(tasks, project, category, priority)
+            project_priority = input("Please enter the project priority: ")
+            project_name = input("Please enter the project name: ")
+            project_category = input("Please enter the project category: ")
+            project_task = input("Please enter the project task: ")
+            task_link = input("Please enter the task link: ")
+            app.add_project(project_priority, project_name, project_category, project_task, task_link)
         elif option == '2':
             project = input("Enter the project to add a task to: ")
             app.add_task_to_project(project)

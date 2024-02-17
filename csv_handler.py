@@ -24,9 +24,12 @@ class CSVHandler:
             print("No data provided for appending.")
 
     def _write_data(self, data, mode):
-        try:
-            with open(self.filename, mode, newline='') as f:
-                csv.writer(f).writerows(data)
-        except Exception as e:
-            print(f"An error occurred: {e}")
+        if isinstance(data, list) and all(isinstance(row, list) for row in data):
+            try:
+                with open(self.filename, mode, newline='') as f:
+                    csv.writer(f).writerows(data)
+            except Exception as e:
+                print(f"An error occurred: {e}")
+        else:
+            print("Invalid data format. Please provide a list of lists where each inner list represents a row.")
 

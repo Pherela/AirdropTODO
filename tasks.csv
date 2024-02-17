@@ -17,3 +17,4 @@ low,gibrator,testnet,bridge,http://vienna.calderabridge.xyz/
 low,gibrator,testnet,bridge,http://milan-gibraltar.calderabridge.xyz
 high,metis_journey,testnet,quests,https://decentralize.metis.io/
 low,tunachain,testnet,quests,https://tunachain.io/points
+high,bullachain,testnet,claim,somedex
