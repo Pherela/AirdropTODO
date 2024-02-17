@@ -1,6 +1,5 @@
 import csv
 import os
-from prettytable import PrettyTable
 from csv_handler import CSVHandler
 
 
@@ -25,21 +24,21 @@ class TodoApp:
                 task_data = [row[0], row[1], row[2], task_priority, task_name, task_link]
                 self.handler.append_csv([task_data])
 
-    def view_data(self):
-        read = self.handler.read_csv()
-        data = list(read)
-        table = PrettyTable()
-        table.align = 'l'
-        order = {'high': 1, 'medium': 2, 'low': 3}
-        data[1:] = sorted(data[1:], key=lambda row: order.get(row[0], 4))
+    def view_projects(self):
+        data = list(self.handler.read_csv())
         seen = set()
-        for i, row in enumerate(data):
-            if i == 0:
-                table.field_names = [row[0], row[1], row[2]]
-            elif row[1] not in seen:
-                table.add_row([row[0], row[1], row[2]])
+        print('{:<8} {:<14} {:<8}'.format(*data[0]))
+        for row in sorted(data[1:], key=lambda row: {'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4)):
+           if row[1] not in seen:
+                print('{:<8} {:<14} {:<8}'.format(*row))
                 seen.add(row[1])
-        print(table)
+
+    def view_tasks(self):
+        data = list(self.handler.read_csv())
+        print('{:<12} {:<14}'.format(*data[0][4:6]))
+        for row in sorted(data[1:], key=lambda row: {'high': 1, 'medium': 2, 'low': 3}.get(row[3], 4)):
+            clean_url = row[5].replace('http://', '').replace('https://', '').replace('www.', '')
+            print('{:<12} {:<14}'.format(row[4], clean_url))
 
     def delete_project(self, project_name):
         tasks = self.handler.read_csv()
@@ -63,7 +62,7 @@ def main():
             "1. add project",
             "2. add task",
             "3. view projects",
-            "4. Delete project",
+            "4. view tasks",
             "5. Edit project",
             "6. edit task",
             "7. edit link",
@@ -86,10 +85,9 @@ def main():
             task_link = input("Please enter the task link: ")
             app.add_task(project_name, task_priority, task_name, task_link)
         elif option == '3':
-            app.view_data()
+            app.view_projects()
         elif option == '4':
-            project = input("Enter a project to delete: ")
-            print(app.delete_project(project))
+            app.view_tasks()
         elif option == '5':
             app.edit_string()
         elif option == '6':

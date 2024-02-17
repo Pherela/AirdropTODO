@@ -1,4 +1,4 @@
-priority,project,category,task_priority,task_name,task_link
+priority,project,category,priority,task,link
 high,berachain,testnet,high,claim_faucet,https://artio.faucet.berachain.com/
 high,berachain,testnet,low,claim_faucet,https://faucet.0xhoneyjar.xyz/
 high,berachain,testnet,low,swap,https://artio.bex.berachain.com/swap
@@ -8,8 +8,8 @@ high,berachain,testnet,medium,provide_lp,https://berachain.algebra.finance/pools
 high,berachain,testnet,low,mint,https://www.bera404.com/
 high,berachain,testnet,high,mint,https://faucet.0xhoneyjar.xyz/mint
 high,berachain,testnet,high,quests,https://faucet.0xhoneyjar.xyz/quests
-medium,fuel,testnet,high,claim_faucet,https://faucet-beta-4.fuel.network/?address=fhtfuel162sdc3a00jpt7gpdwwcnwplmafsu0fjzu5aydes5h6htrvpnhq0qh3rndk
-medium,fuel,testnet,low,bridge,https://alpha.fuel.network/bridge?from=eth&to=fuel
+medium,fuel,testnet,high,claim_faucet,https://faucet-beta-4.fuel.network/?
+medium,fuel,testnet,low,bridge,https://alpha.fuel.network/bridge/
 medium,memefi,testnet,high,play_game,https://www.memefi.club/game/
 low,gibrator,testnet,low,claim_faucet,https://vienna.caldera.dev/faucet
 low,gibrator,testnet,low,claim_faucet,http://milan.caldera.dev/faucet
