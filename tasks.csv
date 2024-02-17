@@ -1,4 +1,4 @@
-project_priority,project_name,project_category, task_priority,task_name,task_link
+project_priority,project_name,project_category,task_priority,task_name,task_link
 high,berachain,testnet,high,claim_faucet,https://artio.faucet.berachain.com/
 high,berachain,testnet,low,claim_faucet,https://faucet.0xhoneyjar.xyz/
 high,berachain,testnet,low,swap,https://artio.bex.berachain.com/swap
@@ -15,5 +15,6 @@ low,gibrator,testnet,low,claim_faucet,https://vienna.caldera.dev/faucet
 low,gibrator,testnet,low,claim_faucet,http://milan.caldera.dev/faucet
 low,gibrator,testnet,low,bridge,http://vienna.calderabridge.xyz/
 low,gibrator,testnet,low,bridge,http://milan-gibraltar.calderabridge.xyz
-high,metis_journey,testnet,high,quests,https://decentralize.metis.io/
-low,tunachain,testnet,quests,low,https://tunachain.io/points
+high,metis_journey,low,testnet,quests,https://decentralize.metis.io/
+low,tunachain,testnet,low,quests,https://tunachain.io/points
+low,tunachain,testnet,high,claim_faucet,https://coinfaucet.eu/en/btc-testnet/

@@ -21,9 +21,9 @@ class TodoApp:
     def add_task(self, project_name, task_priority, task_name, task_link):
         data = self.handler.read_csv()
         for row in data:
-            if row['project_name'] == project_name:
-                task_data = [row['project_priority'], row['project_category'], task_priority, task_name, task_link]
-                self.handler.append_csv(task_data)
+            if row[1] == project_name:
+                task_data = [row[0], row[1], row[2], task_priority, task_name, task_link]
+                self.handler.append_csv([task_data])
 
     def view_data(self):
         read = self.handler.read_csv()
@@ -81,7 +81,9 @@ def main():
             app.add_project(project_priority, project_name, project_category, task_priority, task_name, task_link)
         elif option == '2':
             project_name = input("Please enter the project name: ")
-            task_name = input("Please enter the task name: ")                                                   task_priority = input("Please enter the task priority: ")                                           task_link = input("Please enter the task link: ")
+            task_name = input("Please enter the task name: ")
+            task_priority = input("Please enter the task priority: ")
+            task_link = input("Please enter the task link: ")
             app.add_task(project_name, task_priority, task_name, task_link)
         elif option == '3':
             app.view_data()
