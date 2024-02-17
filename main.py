@@ -31,12 +31,12 @@ class TodoApp:
         links = self.get_links(num_links)
         return [task] + links
 
-    def add_project(self, tasks, project, category, priority):
+    def add_project(self, tasks, project, category, project_priority):
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
             for task in tasks:
                 task_info = self.add_task(task)
-                writer.writerow([project, category, priority] + task_info)
+                writer.writerow([project_priority,project, category] + task_info)
 
     def add_task_to_project(self, project):
         tasks = list(self.handler.csv_operation('r'))
@@ -72,10 +72,10 @@ class TodoApp:
                 seen.add(row[1])
         print(table)
 
-    def delete_project(self, project):
+    def delete_project(self, project_name):
         tasks = self.handler.csv_operation('r')
-        new_tasks = [t for t in tasks if t[0] != project]
-        self.handler.csv_operation(new_tasks)
+        new_tasks = [t for t in tasks if t[1] != project_name]
+        self.handler.csv_operation("w", new_tasks)
 
     def edit_string(self):
         data = self.handler.csv_operation('r')
@@ -96,8 +96,8 @@ def main():
             "3. View projects",
             "4. Delete project",
             "5. Edit project",
-            "6. Edit task",
-            "7. Edit link",
+            "6. edit task",
+            "7. edit link",
             "8. Quit",
         ]))
         option = app.get_input("Choose an option: ")
