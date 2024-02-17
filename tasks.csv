@@ -4,6 +4,8 @@ berachain,testnet,high,provide_lp,https://artio.bex.berachain.com/pool,https://b
 berachain,testnet,high,mint,https://www.bera404.com/,https://faucet.0xhoneyjar.xyz/mint
 memefi,testnet,medium,play_game,https://www.memefi.club/game/
 berachain,testnet,high,quests,https://faucet.0xhoneyjar.xyz/quests
-gibrator,testnet,low,faucet,https://vienna.caldera.dev/faucet,http://milan.caldera.dev/faucet
+gibrator,testnet,low,claim_faucet,https://vienna.caldera.dev/faucet,http://milan.caldera.dev/faucet
 gibrator,testnet,low,bridge,http://vienna.calderabridge.xyz/,http://milan-gibraltar.calderabridge.xyz
 metis_journey,testnet,high,quests,https://decentralize.metis.io/
+fuel,testnet,medium,claim_faucet,https://faucet-beta-4.fuel.network/?address=fhtfuel162sdc3a00jpt7gpdwwcnwplmafsu0fjzu5aydes5h6htrvpnhq0qh3rndk
+fuel,testnet,medium,bridge,https://alpha.fuel.network/bridge?from=eth&to=fuel

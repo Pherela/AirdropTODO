@@ -66,29 +66,14 @@ class TodoApp:
         new_tasks = [t for t in tasks if t[0] != project]
         self.handler.csv_operation(new_tasks)
 
-    def edit_project(self, old_project, new_project):
-        tasks = self.handler.csv_operation('r')
-        for t in tasks:
-            if t[0] == old_project:
-                t[0] = new_project
-        self.handler.csv_operation("w", tasks)
-
-    def edit_task(self, project, old_task, new_task):
-        tasks = self.handler.csv_operation('r')
-        for t in tasks:
-            if t[0] == project and t[3] == old_task:
-                t[3] = new_task
-        self.handler.csv_operation("w", tasks)
-
-    def edit_link(self):
+    def edit_string(self):
         data = self.handler.csv_operation('r')
-        old_link = input("Enter the old link you want to replace: ")
-        new_link = input("Enter the new link: ")
-        for sublist in data:
-            for i, item in enumerate(sublist):
-                if item == old_link:
-                    sublist[i] = new_link
+        old_string = input("Enter the old string you want to replace: ")
+        new_string = input("Enter the new string: ")
+        data = [[new_string if item == old_string else item for item in sublist] for sublist in data]
         self.handler.csv_operation("w", data)
+        print("The string has been successfully replaced.")
+
 
 
 def main():
@@ -124,16 +109,11 @@ def main():
             project = input("Enter a project to delete: ")
             print(app.delete_project(project))
         elif option == '5':
-            old_project = input("Enter the project to edit: ")
-            new_project = input("Enter the new project: ")
-            app.edit_project(old_project, new_project)
+            app.edit_string()
         elif option == '6':
-            project = input("Enter the project of the task to edit: ")
-            old_task = input("Enter the task to edit: ")
-            new_task = input("Enter the new task: ")
-            app.edit_task(project, old_task, new_task)
+            app.edit_string()
         elif option == '7':
-            app.edit_link()
+            app.edit_string()
         elif option == '8':
             break
 
