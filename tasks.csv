@@ -1,4 +1,4 @@
-project_priority,project_name,project_category,task_priority,task_name,task_link
+priority,project,category,task_priority,task_name,task_link
 high,berachain,testnet,high,claim_faucet,https://artio.faucet.berachain.com/
 high,berachain,testnet,low,claim_faucet,https://faucet.0xhoneyjar.xyz/
 high,berachain,testnet,low,swap,https://artio.bex.berachain.com/swap

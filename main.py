@@ -61,8 +61,8 @@ def main():
     while True:
         print("\n".join([
             "1. add project",
-            "2. Add task to existing project",
-            "3. View projects",
+            "2. add task",
+            "3. view projects",
             "4. Delete project",
             "5. Edit project",
             "6. edit task",
