@@ -15,26 +15,15 @@ class TodoApp:
             with open(self.filename, 'w') as f:
                 pass
 
-    def add_project(self, project_priority, project_name, project_category, project_task, task_link):
-        self.handler.append_csv([[project_priority, project_name, project_category, project_task, task_link]])
+    def add_project(self, project_priority, project_name, project_category, task_priority, task_name, task_link):
+        self.handler.append_csv([[project_priority, project_name, project_category, task_priority, task_name, task_link]])
 
-    def add_task_to_project(self, project_name):
-        tasks = list(self.handler.read_csv())
-        project_tasks = [t for t in tasks if t[1] == project_name]
-    
-        if not project_tasks:
-            print(f"Project {project_name} does not exist.")
-            return
-
-        project_priority = project_tasks[0][0]
-        task = input(f"Enter a new task for project '{project_name}': ")
-        category = project_tasks[0][2]
-        link = input(f"Enter the link for task '{task}': ")
-
-        with open(self.filename, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([project_priority, project_name, category, task, link])
-
+    def add_task(self, project_name, task_priority, task_name, task_link):
+        data = self.handler.read_csv()
+        for row in data:
+            if row['project_name'] == project_name:
+                task_data = [row['project_priority'], row['project_category'], task_priority, task_name, task_link]
+                self.handler.append_csv(task_data)
 
     def view_data(self):
         read = self.handler.read_csv()
@@ -83,15 +72,17 @@ def main():
         option = input("Choose an option: ")
 
         if option == '1':
-            project_priority = input("Please enter the project priority: ")
             project_name = input("Please enter the project name: ")
+            project_priority = input("Please enter the project priority: ")
             project_category = input("Please enter the project category: ")
-            project_task = input("Please enter the project task: ")
+            task_name = input("Please enter the task name: ")
+            task_priority = input("Please enter the task priority: ")
             task_link = input("Please enter the task link: ")
-            app.add_project(project_priority, project_name, project_category, project_task, task_link)
+            app.add_project(project_priority, project_name, project_category, task_priority, task_name, task_link)
         elif option == '2':
-            project = input("Enter the project to add a task to: ")
-            app.add_task_to_project(project)
+            project_name = input("Please enter the project name: ")
+            task_name = input("Please enter the task name: ")                                                   task_priority = input("Please enter the task priority: ")                                           task_link = input("Please enter the task link: ")
+            app.add_task(project_name, task_priority, task_name, task_link)
         elif option == '3':
             app.view_data()
         elif option == '4':
