@@ -1,5 +1,6 @@
 import csv
 import os
+from prettytable import PrettyTable
 from csv_handler import CSVHandler
 
 
@@ -55,11 +56,21 @@ class TodoApp:
             writer.writerow([project, category, priority, task] + links)
 
 
-    def view_tasks(self):
-        with open(self.filename, 'r') as f:
-            reader = csv.reader(f)
-            for row in reader:
-                print(f'Project: {row[0]}, Category: {row[1]}, Priority: {row[2]}, Task: {row[3]}, Links: {", ".join(row[4:])}')
+    def view_data(self):
+        read = self.handler.csv_operation('r')
+        data = list(read)
+        table = PrettyTable()
+        table.align = 'l'
+        order = {'high': 1, 'medium': 2, 'low': 3}
+        data[1:] = sorted(data[1:], key=lambda row: order.get(row[0], 4))
+        seen = set()
+        for i, row in enumerate(data):
+            if i == 0:
+                table.field_names = [row[0], row[1], row[2]]
+            elif row[1] not in seen:
+                table.add_row([row[0], row[1], row[2]])
+                seen.add(row[1])
+        print(table)
 
     def delete_project(self, project):
         tasks = self.handler.csv_operation('r')
@@ -82,7 +93,7 @@ def main():
         print("\n".join([
             "1. Add project",
             "2. Add task to existing project",
-            "3. View tasks",
+            "3. View projects",
             "4. Delete project",
             "5. Edit project",
             "6. Edit task",
@@ -104,7 +115,7 @@ def main():
             project = input("Enter the project to add a task to: ")
             app.add_task_to_project(project)
         elif option == '3':
-            app.view_tasks()
+            app.view_data()
         elif option == '4':
             project = input("Enter a project to delete: ")
             print(app.delete_project(project))
