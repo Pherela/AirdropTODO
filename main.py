@@ -15,22 +15,6 @@ class TodoApp:
             with open(self.filename, 'w') as f:
                 pass
 
-    def get_input(self, prompt, input_type=str):
-        while True:
-            try:
-                value = input_type(input(prompt))
-                return value
-            except ValueError:
-                print(f"Invalid input. Please enter a {input_type.__name__}.")
-
-    def get_links(self, num_links):
-        return [self.get_input(f"Enter link {i+1}: ") for i in range(num_links)]
-
-    def add_task(self, task):
-        num_links = self.get_input(f"Enter the number of links for task '{task}': ", int)
-        links = self.get_links(num_links)
-        return [task] + links
-
     def add_project(self, tasks, project, category, project_priority):
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
@@ -38,26 +22,26 @@ class TodoApp:
                 task_info = self.add_task(task)
                 writer.writerow([project_priority,project, category] + task_info)
 
-    def add_task_to_project(self, project):
-        tasks = list(self.handler.csv_operation('r'))
-        project_tasks = [t for t in tasks if t[0] == project]
-
+    def add_task_to_project(self, project_name):
+        tasks = list(self.handler.read_csv())
+        project_tasks = [t for t in tasks if t[1] == project_name]
+    
         if not project_tasks:
-            print(f"Project {project} does not exist.")
+            print(f"Project {project_name} does not exist.")
             return
 
-        task = input(f"Enter a new task for project '{project}': ")
-        category, priority = project_tasks[0][1:3]
-        num_links = self.get_input(f"Enter the number of links for task '{task}': ", int)
-        links = self.get_links(num_links)
+        project_priority = project_tasks[0][0]
+        task = input(f"Enter a new task for project '{project_name}': ")
+        category = project_tasks[0][2]
+        link = input(f"Enter the link for task '{task}': ")
 
         with open(self.filename, 'a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([project, category, priority, task] + links)
+            writer.writerow([project_priority, project_name, category, task, link])
 
 
     def view_data(self):
-        read = self.handler.csv_operation('r')
+        read = self.handler.read_csv()
         data = list(read)
         table = PrettyTable()
         table.align = 'l'
@@ -73,16 +57,16 @@ class TodoApp:
         print(table)
 
     def delete_project(self, project_name):
-        tasks = self.handler.csv_operation('r')
+        tasks = self.handler.read_csv()
         new_tasks = [t for t in tasks if t[1] != project_name]
-        self.handler.csv_operation("w", new_tasks)
+        self.handler.write_csv(new_tasks)
 
     def edit_string(self):
-        data = self.handler.csv_operation('r')
+        data = self.handler.read_csv()
         old_string = input("Enter the old string you want to replace: ")
         new_string = input("Enter the new string: ")
         data = [[new_string if item == old_string else item for item in sublist] for sublist in data]
-        self.handler.csv_operation("w", data)
+        self.handler.write_csv(data)
         print("The string has been successfully replaced.")
 
 
@@ -100,10 +84,9 @@ def main():
             "7. edit link",
             "8. Quit",
         ]))
-        option = app.get_input("Choose an option: ")
+        option = input("Choose an option: ")
 
         if option == '1':
-            num_projects = app.get_input("Enter the number of projects: ", int)
             for j in range(num_projects):
                 project = input(f"Enter project {j+1}: ")
                 category = input(f"Enter a category for the project: ")

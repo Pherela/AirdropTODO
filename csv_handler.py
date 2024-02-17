@@ -4,19 +4,29 @@ class CSVHandler:
     def __init__(self, filename):
         self.filename = filename
 
-    def csv_operation(self, mode, data=None):
-        if mode == 'r':
+    def read_csv(self):
+        try:
             with open(self.filename, 'r') as f:
-                reader = csv.reader(f)
-                return list(reader)
-        elif mode == 'w':
-            with open(self.filename, 'w', newline='') as f:
-                writer = csv.writer(f)
-                writer.writerows(data)
-        elif mode == 'a':
-            with open(self.filename, 'a', newline='') as f:
-                writer = csv.writer(f)
-                writer.writerows(data)
+                return list(csv.reader(f))
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def write_csv(self, data):
+        if data:
+            self._write_data(data, 'w')
         else:
-            print("Invalid mode. Use 'r' for read, 'w' for write, or 'a' for append.")
+            print("No data provided for writing.")
+
+    def append_csv(self, data):
+        if data:
+            self._write_data(data, 'a')
+        else:
+            print("No data provided for appending.")
+
+    def _write_data(self, data, mode):
+        try:
+            with open(self.filename, mode, newline='') as f:
+                csv.writer(f).writerows(data)
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
