@@ -15,6 +15,6 @@ low,gibrator,testnet,low,claim_faucet,https://vienna.caldera.dev/faucet
 low,gibrator,testnet,low,claim_faucet,http://milan.caldera.dev/faucet
 low,gibrator,testnet,low,bridge,http://vienna.calderabridge.xyz/
 low,gibrator,testnet,low,bridge,http://milan-gibraltar.calderabridge.xyz
-high,metis_journey,low,testnet,quests,https://decentralize.metis.io/
+high,metis_journey,testnet,low,quests,https://decentralize.metis.io/
 low,tunachain,testnet,low,quests,https://tunachain.io/points
 low,tunachain,testnet,high,claim_faucet,https://coinfaucet.eu/en/btc-testnet/

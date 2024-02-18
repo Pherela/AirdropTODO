@@ -36,14 +36,14 @@ class TodoApp:
     def view_tasks(self):
         data = list(self.handler.read_csv())
         print('{:<12} {:<14}'.format(*data[0][4:6]))
-        for row in sorted(data[1:], key=lambda row: {'high': 1, 'medium': 2, 'low': 3}.get(row[3], 4)):
+        for row in sorted(data[1:], key=lambda row: {'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4)):
             clean_url = row[5].replace('http://', '').replace('https://', '').replace('www.', '')
             print('{:<12} {:<14}'.format(row[4], clean_url))
 
-    def delete_project(self, project_name):
-        tasks = self.handler.read_csv()
-        new_tasks = [t for t in tasks if t[1] != project_name]
-        self.handler.write_csv(new_tasks)
+    def delete_items(self, condition):
+        items = self.handler.read_csv()
+        new_items = [item for item in items if not condition(item)]
+        self.handler.write_csv(new_items)
 
     def edit_string(self):
         data = self.handler.read_csv()
@@ -61,12 +61,13 @@ def main():
         print("\n".join([
             "1. add project",
             "2. add task",
-            "3. view projects",
-            "4. view tasks",
-            "5. Edit project",
+            "3. view project",
+            "4. view task",
+            "5. edit project",
             "6. edit task",
             "7. edit link",
-            "8. Quit",
+            "8. delete project",
+            "9. Quit",
         ]))
         option = input("Choose an option: ")
 
@@ -95,6 +96,10 @@ def main():
         elif option == '7':
             app.edit_string()
         elif option == '8':
+            project_name = input("Please enter the project name: ")
+            app.delete_items(lambda item: item[1] == project_name)
+
+        elif option == '9':
             break
 
 
