@@ -36,9 +36,11 @@ class TodoApp:
     def view_tasks(self):
         data = list(self.handler.read_csv())
         print('{:<12} {:<14}'.format(*data[0][4:6]))
-        for row in sorted(data[1:], key=lambda row: {'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4)):
+        sorted_data = sorted(data[1:], key=lambda row: ({'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4), row[3]))
+        for row in sorted_data:
             clean_url = row[5].replace('http://', '').replace('https://', '').replace('www.', '')
             print('{:<12} {:<14}'.format(row[4], clean_url))
+
 
     def delete_items(self, condition):
         self.handler.write_csv([item for item in self.handler.read_csv() if not condition(item)])
