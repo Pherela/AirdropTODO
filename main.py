@@ -41,68 +41,32 @@ class TodoApp:
             print('{:<12} {:<14}'.format(row[4], clean_url))
 
     def delete_items(self, condition):
-        items = self.handler.read_csv()
-        new_items = [item for item in items if not condition(item)]
-        self.handler.write_csv(new_items)
+        self.handler.write_csv([item for item in self.handler.read_csv() if not condition(item)])
 
     def edit_string(self):
+        old, new = input("Old string: "), input("New string: ")
         data = self.handler.read_csv()
-        old_string = input("Enter the old string you want to replace: ")
-        new_string = input("Enter the new string: ")
-        data = [[new_string if item == old_string else item for item in sublist] for sublist in data]
-        self.handler.write_csv(data)
-        print("The string has been successfully replaced.")
-
-
+        self.handler.write_csv([[new if i == old else i for i in s] for s in data])
+        print("String replaced.")
 
 def main():
     app = TodoApp('tasks.csv')
     while True:
-        print("\n".join([
-            "1. add project",
-            "2. add task",
-            "3. view project",
-            "4. view task",
-            "5. edit project",
-            "6. edit task",
-            "7. edit link",
-            "8. delete project",
-            "9. Quit",
-        ]))
+        print("\n".join([f"{i}. {option}" for i, option in enumerate(["add project", "add task", "view project", "view task", "edit project", "edit task", "edit link", "delete project", "Quit"], start=1)]))
         option = input("Choose an option: ")
 
         if option == '1':
-            project_name = input("Please enter the project name: ")
-            project_priority = input("Please enter the project priority: ")
-            project_category = input("Please enter the project category: ")
-            task_name = input("Please enter the task name: ")
-            task_priority = input("Please enter the task priority: ")
-            task_link = input("Please enter the task link: ")
-            app.add_project(project_priority, project_name, project_category, task_priority, task_name, task_link)
+            app.add_project(*[input(f"Please enter the {field}: ") for field in ["project priority", "project name", "project category", "task priority", "task name", "task link"]])
         elif option == '2':
-            project_name = input("Please enter the project name: ")
-            task_name = input("Please enter the task name: ")
-            task_priority = input("Please enter the task priority: ")
-            task_link = input("Please enter the task link: ")
-            app.add_task(project_name, task_priority, task_name, task_link)
-        elif option == '3':
-            app.view_projects()
-        elif option == '4':
-            app.view_tasks()
-        elif option == '5':
-            app.edit_string()
-        elif option == '6':
-            app.edit_string()
-        elif option == '7':
+            app.add_task(*[input(f"Please enter the {field}: ") for field in ["project name", "task priority", "task name", "task link"]])
+        elif option in ['3', '4']:
+            getattr(app, ['view_projects', 'view_tasks'][int(option)-3])()
+        elif option in ['5', '6', '7']:
             app.edit_string()
         elif option == '8':
-            project_name = input("Please enter the project name: ")
-            app.delete_items(lambda item: item[1] == project_name)
-
+            app.delete_items(lambda item: item[1] == input("Please enter the project name: "))
         elif option == '9':
             break
-
-
 
 if __name__ == "__main__":
     main()
