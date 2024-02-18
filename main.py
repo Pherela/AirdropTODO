@@ -1,5 +1,6 @@
 import csv
 import os
+import datetime
 from csv_handler import CSVHandler
 
 
@@ -27,19 +28,22 @@ class TodoApp:
     def view_projects(self):
         data = list(self.handler.read_csv())
         seen = set()
-        print('{:<8} {:<14} {:<8}'.format(*data[0]))
-        for row in sorted(data[1:], key=lambda row: {'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4)):
-           if row[1] not in seen:
-                print('{:<8} {:<14} {:<8}'.format(*row))
-                seen.add(row[1])
+        header, *rows = data
+        priority_levels = {'high': 1, 'medium': 2, 'low': 3}
+        sorted_rows = sorted(rows, key=lambda row: priority_levels.get(row[0], 4))
+        unique_rows = [row for row in sorted_rows if row[1] not in seen and not seen.add(row[1])]
+        all_rows = [header] + unique_rows
+        for row in all_rows:
+            print('{:<8} {:<14} {:<8}'.format(*row))
 
     def view_tasks(self):
         data = list(self.handler.read_csv())
         print('{:<12} {:<14}'.format(*data[0][4:6]))
+        current_day = datetime.datetime.now().strftime('%A').lower()
         sorted_data = sorted(data[1:], key=lambda row: ({'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4), row[3]))
         for row in sorted_data:
-            clean_url = row[5].replace('http://', '').replace('https://', '').replace('www.', '')
-            print('{:<12} {:<14}'.format(row[4], clean_url))
+            if row[6].lower() in ['everyday', current_day]:
+                print('{:<12} {:<14}'.format(row[4], row[5].replace('http://', '').replace('https://', '').replace('www.', '')))
 
 
     def delete_items(self, condition):
