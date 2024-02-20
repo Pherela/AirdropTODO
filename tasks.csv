@@ -11,10 +11,10 @@ high,berachain,testnet,high,everyday,quests,https://faucet.0xhoneyjar.xyz/quests
 medium,fuel,testnet,high,everyday,claim_faucet,https://faucet-beta-4.fuel.network/?
 medium,fuel,testnet,low,sunday,bridge,https://alpha.fuel.network/bridge/
 medium,memefi,testnet,high,everyday,play_game,https://www.memefi.club/game/
-low,gibrator,testnet,low,everyday,claim_faucet,https://vienna.caldera.dev/faucet
-low,gibrator,testnet,low,everyday,claim_faucet,http://milan.caldera.dev/faucet
+low,gibrator,testnet,low,monday,claim_faucet,https://vienna.caldera.dev/faucet
+low,gibrator,testnet,low,monday,claim_faucet,http://milan.caldera.dev/faucet
 low,gibrator,testnet,low,sunday,bridge,http://vienna.calderabridge.xyz/
 low,gibrator,testnet,low,sunday,bridge,http://milan-gibraltar.calderabridge.xyz
 high,metis_journey,testnet,low,monday,quests,https://decentralize.metis.io/
 low,tunachain,testnet,low,monday,quests,https://tunachain.io/points
-low,tunachain,testnet,high,everyday,claim_faucet,https://coinfaucet.eu/en/btc-testnet/
+low,tunachain,testnet,high,monday,claim_faucet,https://coinfaucet.eu/en/btc-testnet/

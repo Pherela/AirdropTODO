@@ -20,6 +20,8 @@ class Task:
 class TodoApp:
     PROJECT_NAME_INDEX = 1
     PROJECT_ATTRIBUTES_RANGE = slice(0, 3)
+    TASK_FREQUENCY_INDEX = 4
+    TASK_NAME_INDEX = 5
 
     def __init__(self, filename):
         self.filename = filename
@@ -42,6 +44,15 @@ class TodoApp:
                 self.add_project(project, task)
                 return
         raise ValueError(f"No project named '{project_name}'.")
+
+    def edit_task_frequency(self, project_name: str, task_name: str, new_frequency: str):
+        data = self.handler.read_csv()
+        for row in data:
+            if row[self.PROJECT_NAME_INDEX] == project_name and row[self.TASK_NAME_INDEX] == task_name:
+                row[self.TASK_FREQUENCY_INDEX] = new_frequency
+                self.handler.write_csv(data)
+                return
+        raise ValueError(f"No task named '{task_name}' in project '{project_name}'.")
 
     def view_projects(self):
         data = list(self.handler.read_csv())
@@ -76,7 +87,7 @@ class TodoApp:
 def main():
     app = TodoApp('tasks.csv')
     while True:
-        print("\n".join([f"{i}. {option}" for i, option in enumerate(["add project", "add task", "view project", "view task", "edit project", "edit task", "edit link", "delete project", "Quit"], start=1)]))
+        print("\n".join([f"{i}. {option}" for i, option in enumerate(["add project", "add task", "view project", "view task", "edit project", "edit task", "edit link", "delete project", "edit task frequency", "Quit"], start=1)]))
         option = input("Choose an option: ")
         if option == '1':
             project_details = [input(f"Please enter the {field}: ") for field in ["project priority", "project name", "project category"]]
@@ -96,6 +107,11 @@ def main():
         elif option == '8':
             app.delete_items(lambda item: item[1] == input("Please enter the project name: "))
         elif option == '9':
+            project_name = input("Please enter the project name: ")
+            task_name = input("Please enter the task name: ")
+            new_frequency = input("Please enter the new frequency: ")
+            app.edit_task_frequency(project_name, task_name, new_frequency)
+        elif option == '10':
             break
 
 if __name__ == "__main__":
