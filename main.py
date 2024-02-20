@@ -1,10 +1,26 @@
 import csv
 import os
 import datetime
+from dataclasses import dataclass
 from csv_handler import CSVHandler
 
+@dataclass
+class Project:
+    priority: str
+    name: str
+    category: str
+
+@dataclass
+class Task:
+    priority: str
+    frequency: str
+    name: str
+    link: str
 
 class TodoApp:
+    PROJECT_NAME_INDEX = 1
+    PROJECT_ATTRIBUTES_RANGE = slice(0, 3)
+
     def __init__(self, filename):
         self.filename = filename
         self.ensure_file_exists()
@@ -15,15 +31,17 @@ class TodoApp:
             with open(self.filename, 'w') as f:
                 pass
 
-    def add_project(self, project_priority, project_name, project_category, task_priority, task_name, task_link):
-        self.handler.append_csv([[project_priority, project_name, project_category, task_priority, task_name, task_link]])
+    def add_project(self, project: Project, task: Task):
+        self.handler.append_csv([[*project.__dict__.values(), *task.__dict__.values()]])
 
-    def add_task(self, project_name, task_priority, task_name, task_link):
+    def add_task(self, project_name: str, task: Task):
         data = self.handler.read_csv()
         for row in data:
-            if row[1] == project_name:
-                task_data = [row[0], row[1], row[2], task_priority, task_name, task_link]
-                self.handler.append_csv([task_data])
+            if row[self.PROJECT_NAME_INDEX] == project_name:
+                project = Project(*row[self.PROJECT_ATTRIBUTES_RANGE])
+                self.add_project(project, task)
+                return
+        raise ValueError(f"No project named '{project_name}'.")
 
     def view_projects(self):
         data = list(self.handler.read_csv())
@@ -42,8 +60,8 @@ class TodoApp:
         current_day = datetime.datetime.now().strftime('%A').lower()
         sorted_data = sorted(data[1:], key=lambda row: ({'high': 1, 'medium': 2, 'low': 3}.get(row[0], 4), row[3]))
         for row in sorted_data:
-            if row[6].lower() in ['everyday', current_day]:
-                print('{:<12} {:<14}'.format(row[4], row[5].replace('http://', '').replace('https://', '').replace('www.', '')))
+            if row[4].lower() in ['everyday', current_day]:
+                print('{:<12} {:<14}'.format(row[4], row[6].replace('http://', '').replace('https://', '').replace('www.', '')))
 
 
     def delete_items(self, condition):
@@ -60,11 +78,17 @@ def main():
     while True:
         print("\n".join([f"{i}. {option}" for i, option in enumerate(["add project", "add task", "view project", "view task", "edit project", "edit task", "edit link", "delete project", "Quit"], start=1)]))
         option = input("Choose an option: ")
-
         if option == '1':
-            app.add_project(*[input(f"Please enter the {field}: ") for field in ["project priority", "project name", "project category", "task priority", "task name", "task link"]])
+            project_details = [input(f"Please enter the {field}: ") for field in ["project priority", "project name", "project category"]]
+            task_details = [input(f"Please enter the {field}: ") for field in ["task priority", "task frequency", "task name", "task link"]]
+            project = Project(*project_details)
+            task = Task(*task_details)
+            app.add_project(project, task)
         elif option == '2':
-            app.add_task(*[input(f"Please enter the {field}: ") for field in ["project name", "task priority", "task name", "task link"]])
+            project_name = input("Please enter the project name: ")
+            task_details = [input(f"Please enter the {field}: ") for field in ["task priority", "task frequency", "task name", "task link"]]
+            task = Task(*task_details)
+            app.add_task(project_name, task)
         elif option in ['3', '4']:
             getattr(app, ['view_projects', 'view_tasks'][int(option)-3])()
         elif option in ['5', '6', '7']:
